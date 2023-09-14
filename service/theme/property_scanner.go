@@ -120,6 +120,7 @@ func (s *propertyScannerImpl) ReadThemeProperty(ctx context.Context, themePath s
 		return nil, err
 	}
 	themeProperty.ScreenShots = strings.Join([]string{"/themes", filepath.Base(themePath), screenshotFilename}, "/")
+	themeProperty.FolderName = strings.TrimSuffix(themeProperty.FolderName, ".git")
 	return themeProperty, nil
 }
 
