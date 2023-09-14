@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/gin-gonic/gin"
 	"mime/multipart"
 
 	"github.com/go-sonic/sonic/model/dto"
@@ -28,4 +29,5 @@ type ThemeService interface {
 	TemplateExist(ctx context.Context, template string) (bool, error)
 	Render(ctx context.Context, name string) (string, error)
 	Fetch(ctx context.Context, themeURL string) (*dto.ThemeProperty, error)
+	UpdateThemeByFetching(ctx *gin.Context, id string) (interface{}, error)
 }

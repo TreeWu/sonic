@@ -25,16 +25,26 @@ func (g gitThemeFetcherImpl) FetchTheme(ctx context.Context, file interface{}) (
 	tempDir := os.TempDir()
 
 	themeDirName := lastSplit
-	_, err := git.PlainClone(filepath.Join(tempDir, themeDirName), false, &git.CloneOptions{
+	path := filepath.Join(tempDir, themeDirName)
+	//if file path exist, delete it
+	if _, err := os.Stat(path); err == nil {
+		err = os.RemoveAll(path)
+		if err != nil {
+			return nil, xerr.WithStatus(err, xerr.StatusBadRequest).WithMsg(err.Error())
+		}
+	}
+	_, err := git.PlainClone(path, false, &git.CloneOptions{
 		URL: gitURL,
 	})
 	if err != nil {
 		return nil, xerr.WithStatus(err, xerr.StatusBadRequest).WithMsg(err.Error())
 	}
-	themeProperty, err := g.PropertyScanner.ReadThemeProperty(ctx, filepath.Join(tempDir, themeDirName))
+	themeProperty, err := g.PropertyScanner.ReadThemeProperty(ctx, path)
 	if err != nil {
 		return nil, err
 	}
+	// delete themeProperty.FolderName .git stuff
+	themeProperty.FolderName = strings.TrimSuffix(themeProperty.FolderName, ".git")
 	return themeProperty, nil
 }
 

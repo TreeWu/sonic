@@ -2,6 +2,7 @@ package impl
 
 import (
 	"context"
+	"github.com/gin-gonic/gin"
 	"io"
 	"mime/multipart"
 	"os"
@@ -23,13 +24,15 @@ import (
 	"github.com/go-sonic/sonic/util/xerr"
 )
 
+var _ service.ThemeService = (*themeServiceImpl)(nil)
+
 type themeServiceImpl struct {
-	OptionService            service.OptionService
-	Config                   *config.Config
-	Event                    event.Bus
-	PropertyScanner          theme.PropertyScanner
-	FileScanner              theme.FileScanner
-	ThemeFetchers            themeFetchers
+	OptionService   service.OptionService
+	Config          *config.Config
+	Event           event.Bus
+	PropertyScanner theme.PropertyScanner
+	FileScanner     theme.FileScanner
+	ThemeFetchers   themeFetchers
 }
 
 type themeFetchers struct {
@@ -40,12 +43,12 @@ type themeFetchers struct {
 
 func NewThemeService(optionService service.OptionService, config *config.Config, event event.Bus, propertyScanner theme.PropertyScanner, fileScanner theme.FileScanner, themeFetcher themeFetchers) service.ThemeService {
 	return &themeServiceImpl{
-		OptionService:            optionService,
-		Config:                   config,
-		Event:                    event,
-		PropertyScanner:          propertyScanner,
-		FileScanner:              fileScanner,
-		ThemeFetchers:            themeFetcher,
+		OptionService:   optionService,
+		Config:          config,
+		Event:           event,
+		PropertyScanner: propertyScanner,
+		FileScanner:     fileScanner,
+		ThemeFetchers:   themeFetcher,
 	}
 }
 
@@ -483,4 +486,25 @@ func (t *themeServiceImpl) Fetch(ctx context.Context, themeURL string) (*dto.The
 		return nil, xerr.WithStatus(err, xerr.StatusBadRequest).WithMsg(err.Error())
 	}
 	return t.addTheme(ctx, fetchTheme)
+}
+
+func (t *themeServiceImpl) UpdateThemeByFetching(ctx *gin.Context, id string) (interface{}, error) {
+	theme, err := t.GetThemeByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	fetchTheme, err := t.ThemeFetchers.GitRepoThemeFetcher.FetchTheme(ctx, theme.Repo)
+	if err != nil {
+		return nil, xerr.WithStatus(err, xerr.StatusBadRequest).WithMsg(err.Error())
+	}
+	return t.updateThem(ctx, fetchTheme)
+}
+
+func (t *themeServiceImpl) updateThem(ctx context.Context, themeProperty *dto.ThemeProperty) (*dto.ThemeProperty, error) {
+
+	err := util.CopyDir(themeProperty.ThemePath, filepath.Join(t.Config.Sonic.ThemeDir, themeProperty.FolderName))
+	if err != nil {
+		return nil, xerr.WithStatus(err, xerr.StatusBadRequest)
+	}
+	return t.PropertyScanner.ReadThemeProperty(ctx, filepath.Join(t.Config.Sonic.ThemeDir, themeProperty.FolderName))
 }

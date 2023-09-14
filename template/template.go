@@ -2,6 +2,8 @@ package template
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	htmlTemplate "html/template"
 	"io"
 	"io/fs"
@@ -118,6 +120,8 @@ func (t *Template) wrapData(data Model) map[string]any {
 	defer t.lock.RUnlock()
 	data.MergeAttributes(t.sharedVariable)
 	data["now"] = time.Now()
+	marshal, _ := json.Marshal(data)
+	fmt.Println(string(marshal))
 	return data
 }
 

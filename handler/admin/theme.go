@@ -294,7 +294,11 @@ func (t *ThemeHandler) FetchTheme(ctx *gin.Context) (interface{}, error) {
 }
 
 func (t *ThemeHandler) UpdateThemeByFetching(ctx *gin.Context) (interface{}, error) {
-	return nil, xerr.WithMsg(nil, "not support").WithStatus(xerr.StatusInternalServerError)
+	themeID, err := util.ParamString(ctx, "themeID")
+	if err != nil {
+		return nil, err
+	}
+	return t.ThemeService.UpdateThemeByFetching(ctx, themeID)
 }
 
 func (t *ThemeHandler) ReloadTheme(ctx *gin.Context) (interface{}, error) {
