@@ -23,6 +23,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.0.6
 	github.com/pkg/errors v0.9.1
 	github.com/pquerna/otp v1.4.0
+	github.com/qiniu/go-sdk/v7 v7.17.1
 	github.com/spf13/afero v1.9.3
 	github.com/spf13/cast v1.5.1
 	github.com/spf13/viper v1.14.0
@@ -97,6 +98,7 @@ require (
 	golang.org/x/image v0.0.0-20211028202545-6944b10bf410 // indirect
 	golang.org/x/mod v0.8.0 // indirect
 	golang.org/x/net v0.10.0 // indirect
+	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.8.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
 	golang.org/x/time v0.0.0-20220609170525-579cf78fd858 // indirect

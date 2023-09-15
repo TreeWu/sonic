@@ -23,13 +23,15 @@ type fileStorageComposite struct {
 	localStorage *storageimpl.LocalFileStorage
 	minio        *storageimpl.MinIO
 	aliyunOSS    *storageimpl.Aliyun
+	qiniuOss     *storageimpl.Qiniu
 }
 
-func NewFileStorageComposite(localStorage *storageimpl.LocalFileStorage, minio *storageimpl.MinIO, aliyun *storageimpl.Aliyun) FileStorageComposite {
+func NewFileStorageComposite(localStorage *storageimpl.LocalFileStorage, minio *storageimpl.MinIO, aliyun *storageimpl.Aliyun, qiniu *storageimpl.Qiniu) FileStorageComposite {
 	return &fileStorageComposite{
 		localStorage: localStorage,
 		minio:        minio,
 		aliyunOSS:    aliyun,
+		qiniuOss:     qiniu,
 	}
 }
 
@@ -41,6 +43,8 @@ func (f *fileStorageComposite) GetFileStorage(storageType consts.AttachmentType)
 		return f.minio
 	case consts.AttachmentTypeAliOSS:
 		return f.aliyunOSS
+	case consts.AttachmentTypeQiNiuOSS:
+		return f.qiniuOss
 	default:
 		panic("Unsupported file storage")
 	}

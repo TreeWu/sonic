@@ -75,6 +75,7 @@ func (c *clientOptionServiceImpl) getPrivateOption() map[string]struct{} {
 		property.HuaweiOssAccessKey,
 		property.HuaweiOssAccessSecret,
 		property.QiniuOssAccessKey,
+		property.QiniuOssSource,
 		property.QiniuOssAccessSecret,
 		property.QiniuOssDomain,
 		property.QiniuOssBucket,

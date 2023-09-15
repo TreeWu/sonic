@@ -119,6 +119,7 @@ var AllProperty = []Property{
 	QiniuOssAccessKey,
 	QiniuOssAccessSecret,
 	QiniuOssDomain,
+	QiniuOssSource,
 	QiniuOssBucket,
 	QiniuDomainProtocol,
 	QiniuOssStyleRule,

@@ -150,12 +150,17 @@ var HuaweiOssAccessSecret = Property{
 	Kind:         reflect.String,
 }
 
+var QiniuOssSource = Property{
+	DefaultValue: "",
+	KeyValue:     "oss_qiniu_source",
+	Kind:         reflect.String,
+}
+
 var QiniuOssAccessKey = Property{
 	DefaultValue: "",
 	KeyValue:     "oss_qiniu_access_key",
 	Kind:         reflect.String,
 }
-
 var QiniuOssAccessSecret = Property{
 	DefaultValue: "",
 	KeyValue:     "oss_qiniu_access_secret",
