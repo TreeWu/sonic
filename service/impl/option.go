@@ -296,7 +296,7 @@ func (o *optionServiceImpl) ListAllOption(ctx context.Context) ([]*dto.Option, e
 	for _, option := range options {
 		p, ok := propertyMap[option.OptionKey]
 		if !ok {
-			panic("property not exist")
+			return nil, xerr.WithMsg(xerr.BadParam.New("key=%v", option.OptionKey).WithMsg("option key not exist").WithStatus(xerr.StatusInternalServerError), "option key not exist")
 		}
 		value, err := o.convert(option, p)
 		if err != nil {
